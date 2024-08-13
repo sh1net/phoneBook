@@ -1,0 +1,138 @@
+.login_modal_main_container {
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.login_modal_container {
+    background-color: white;
+    color: black;
+    width: 400px;
+    height: fit-content;
+    max-height:70%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    padding: 5px 10px;
+    border: 2px solid gray;
+}
+
+.login_modal_header_name {
+    font-size: 20px;
+    margin: 5px 5px;
+}
+
+.login_modal_header_container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login_modal_close_button {
+    font-size: 26px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.login_modal_close_button:hover {
+    color: red;
+}
+
+.login_modal_enter_field{
+    display:flex;
+    flex-direction: column;
+    padding:20px;
+    gap:15px;
+    align-items: center;
+}
+
+.login_modal_password_container{
+    display:flex;
+    width:100%;
+    flex-direction: row;
+    align-items: center;
+    gap:10px;
+}
+
+.login_modal_password_container .MuiTextField-root {
+    flex-grow: 1;
+}
+
+.login_modal_eye{
+    cursor:pointer;
+    margin:0;
+    font-size: 23px;
+    flex-shrink: 0;
+}
+
+.login_modal_enter_button{
+    padding:5px 40px !important;
+    color:white !important;
+    background-color: gray !important;
+    border-color: gray !important;
+    width:fit-content;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: darkgray !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: dimgray !important;
+}
+
+.MuiSelect-outlined:hover .MuiOutlinedInput-notchedOutline {
+    border-color: darkgray !important;
+}
+
+.MuiSelect-outlined.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: dimgray !important;
+}
+
+.login_modal_eye:hover {
+    color: darkgray;
+}
+
+/* Style the legend text and its span */
+.MuiOutlinedInput-notchedOutline {
+    legend {
+        color: gray !important;
+    }
+}
+
+/* If directly targeting the span inside the legend */
+.MuiOutlinedInput-notchedOutline legend span {
+    color: gray !important;
+}
+
+/* Optional: Change color on focus */
+.Mui-focused .MuiOutlinedInput-notchedOutline legend span {
+    color: dimgray !important;
+}
+
+/* Additional CSS to ensure consistent styling */
+.MuiOutlinedInput-notchedOutline {
+    border-color: gray !important;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: darkgray !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: dimgray !important;
+}
+
+.MuiInputLabel-root {
+    color: gray !important;
+}
+
+.MuiInputLabel-root.Mui-focused {
+    color: dimgray !important;
+}

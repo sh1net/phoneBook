@@ -1,0 +1,49 @@
+.search_container{
+    display:flex;
+    align-items: center;
+    gap:10px;
+}
+
+.search_input .MuiOutlinedInput-root {
+    color: black;
+    border-color: white;
+    background-color: white;
+}
+
+.search_input .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+    border-color: white;
+}
+
+.search_input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: white;
+}
+
+.search_input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: white;
+}
+
+.search_input .MuiInputLabel-outlined {
+    color: white;
+}
+
+.search_input .MuiOutlinedInput-input {
+    padding: 6px 8px; 
+}
+
+.search_icon{
+    color:white;
+    cursor:pointer;
+    font-size: 17px;
+}
+
+.search_close_icon{
+    position:relative;
+    right:-6px;
+    color:black;
+    font-size: 18px;
+    cursor:pointer;
+}
+
+.search_close_icon:hover{
+    color:gray;
+}

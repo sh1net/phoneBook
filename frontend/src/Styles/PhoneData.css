@@ -1,0 +1,9 @@
+.create_row_button{
+    background-color: gray !important;
+}
+
+.toogle_row_button_container{
+    margin: 10px 10px;
+    display:flex;
+    gap:10px;
+}
