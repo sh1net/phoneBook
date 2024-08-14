@@ -1,6 +1,5 @@
 const API_URL = 'http://localhost:3001/api';
 
-// Function to get all users
 export const getUsers = async () => {
   try {
     const response = await fetch(`${API_URL}/users`);
@@ -11,11 +10,9 @@ export const getUsers = async () => {
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
-    throw error;
   }
 };
 
-// Updated searchData function
 export const searchData = async (query) => {
   try {
     const response = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}`);
@@ -26,6 +23,13 @@ export const searchData = async (query) => {
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
-    throw error;
   }
 };
+
+export const login = async (query) => {
+  try{
+    const res = await fetch()
+  }catch(e){
+    console.error('Error login user: ',e)
+  }
+}

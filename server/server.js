@@ -19,7 +19,6 @@ connection.connect((err) => {
     console.error('Ошибка подключения к базе данных:', err);
     return;
   }
-  console.log('Подключение к базе данных успешно установлено.');
 });
 
 app.use(express.json());
