@@ -1,19 +1,30 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import '../Styles/Login.css';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { Button } from '@mui/material';
+import { login } from '../api/api'
 
 function Login({ closeModal }) {
-    const [user, setUser] = useState('');
 
-    const handleChange = (event) => {
-        setUser(event.target.value);
+    const [userName, setUserName] = useState('')
+    const [userPassword, setUserPassword] = useState('')
+
+    const handleSubmit = async () => {
+        const result = await login(userName, userPassword);
+        if (result) {
+            console.log(result);
+        } else {
+            console.log('error')
+        }
     };
+    const handleUserName = (e) => {
+        setUserName(e.target.value)
+    }
+
+    const handleUserPassword = (e) => {
+        setUserPassword(e.target.value)
+    }
 
     const [eye, setEye] = useState(true);
 
@@ -29,11 +40,14 @@ function Login({ closeModal }) {
                     <p className='login_modal_close_button' onClick={closeModal}>&times;</p>
                 </div>
                 <div className='login_modal_enter_field'>
-                <TextField
+                    <div className='login_modal_password_container'>
+                        <TextField
                             id="outlined-basic"
-                            label="Логин"
+                            label="Имя пользователя"
                             variant="outlined"
                             className='login_modal_input_password'
+                            value={userName}
+                            onChange={handleUserName}
                             sx={{
                                 '& .MuiOutlinedInput-notchedOutline': {
                                     borderColor: 'gray',
@@ -46,6 +60,7 @@ function Login({ closeModal }) {
                                 },
                             }}
                         />
+                    </div>
                     <div className='login_modal_password_container'>
                         <TextField
                             id="outlined-basic"
@@ -53,6 +68,8 @@ function Login({ closeModal }) {
                             variant="outlined"
                             className='login_modal_input_password'
                             type={eye ? 'password' : 'text'}
+                            value={userPassword}
+                            onChange={handleUserPassword}
                             sx={{
                                 '& .MuiOutlinedInput-notchedOutline': {
                                     borderColor: 'gray',
@@ -73,6 +90,7 @@ function Login({ closeModal }) {
                     <Button
                         variant="outlined"
                         className='login_modal_enter_button'
+                        onClick={handleSubmit}
                     >
                         Войти
                     </Button>

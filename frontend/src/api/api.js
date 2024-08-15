@@ -26,10 +26,18 @@ export const searchData = async (query) => {
   }
 };
 
-export const login = async (query) => {
-  try{
-    const res = await fetch()
-  }catch(e){
-    console.error('Error login user: ',e)
+export const login = async (username, password) => {
+  try {
+    const response = await fetch(`${API_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ smma: username, password }),
+    });
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    return(e.response?.data.message)
   }
-}
+};
