@@ -47,10 +47,12 @@ function Search() {
                     }
                 }}
             />
-            <FaSearch
-                className='search_icon'
-                onClick={handleSearchClick}
-            />
+            <div className='search_icon_container'>
+                <FaSearch
+                    className='search_icon'
+                    onClick={handleSearchClick}
+                />
+            </div>
         </div>
     );
 }

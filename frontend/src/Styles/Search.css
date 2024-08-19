@@ -30,6 +30,22 @@
     padding: 6px 8px; 
 }
 
+.search_icon_container{
+    display:flex;
+    align-items: center;
+    background-color: transparent;
+    border-radius: 20px;
+    width:30px;
+    height:30px;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.search_icon_container:hover {
+    background-color: rgb(156, 156, 156);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 10px 5px rgb(199, 199, 199);
+}
 .search_icon{
     color:white;
     cursor:pointer;

@@ -3,12 +3,19 @@ import '../Styles/Navbar.css'
 import mzh from '../images/MGW_logo_print.png'
 import Login from './Login'
 import { Button } from '@mui/material';
-import { IoMdLogIn } from "react-icons/io";
+import { IoMdLogIn, IoMdLogOut } from "react-icons/io";
 import Search from '../components/Search';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAuthIsAuth, selectAuthUser, setIsAuth, setUser } from '../redux/authSlice'
 
 function Navbar() {
 
     const [isLogin, setIsLogin] = useState(false)
+
+    const dispatch = useDispatch()
+
+    const isAuth = useSelector(selectAuthIsAuth);
+    const user = useSelector(selectAuthUser);
 
     const OpenLoginModal = () => {
         setIsLogin(true)
@@ -16,6 +23,12 @@ function Navbar() {
 
     const closeLoginModal = () => {
         setIsLogin(false)
+    }
+
+    const logout = () => {
+        dispatch(setIsAuth(false))
+        dispatch(setUser({}))
+        localStorage.removeItem('user')
     }
 
     useEffect(() => {
@@ -31,15 +44,30 @@ function Navbar() {
                 <img src={mzh} className='logo_img' />
             </div>
             <div className='button_navbar_container'>
-                <Search/>
-                <Button
-                    className='navbar_login_button'
-                    variant="outlined"
-                    endIcon={<IoMdLogIn />}
-                    onClick={OpenLoginModal}
-                >Войти</Button>
+                <Search />
+                {isAuth ?
+                    <div className='navbar_user_logout_container'>
+                        <div className='navbar_user_profile_container'>
+                            <p className='navbar_user_profile_name'>{user.name}</p>
+                            <p className='navbar_user_profile_role'>{user.role}</p>
+                        </div>
+                        <Button
+                            className='navbar_login_button'
+                            variant="outlined"
+                            endIcon={<IoMdLogOut />}
+                            onClick={logout}
+                        >Выйти</Button>
+                    </div>
+                    :
+                    <Button
+                        className='navbar_login_button'
+                        variant="outlined"
+                        endIcon={<IoMdLogIn />}
+                        onClick={OpenLoginModal}
+                    >Войти</Button>
+                }
             </div>
-            {isLogin && <Login closeModal={closeLoginModal}/>}
+            {isLogin && <Login closeModal={closeLoginModal} />}
         </div>
     )
 }

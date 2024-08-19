@@ -4,20 +4,35 @@ import '../Styles/Login.css';
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { Button } from '@mui/material';
 import { login } from '../api/api'
+import { useDispatch } from 'react-redux';
+import { setIsAuth, setUser } from '../redux/authSlice';
 
 function Login({ closeModal }) {
 
     const [userName, setUserName] = useState('')
     const [userPassword, setUserPassword] = useState('')
+    const [eye, setEye] = useState(true);
+    const [error, setError] = useState('');
+
+    const dispatch = useDispatch();
 
     const handleSubmit = async () => {
+        if (!userName || !userPassword) {
+            setError('Username and password are required');
+            return;
+        }
+
         const result = await login(userName, userPassword);
         if (result) {
-            console.log(result);
+            localStorage.setItem('user', JSON.stringify(result));
+            dispatch(setIsAuth(true));
+            dispatch(setUser(result));
+            closeModal();
         } else {
-            console.log('error')
+            setError('Login failed. Please check your credentials.');
         }
     };
+
     const handleUserName = (e) => {
         setUserName(e.target.value)
     }
@@ -25,8 +40,6 @@ function Login({ closeModal }) {
     const handleUserPassword = (e) => {
         setUserPassword(e.target.value)
     }
-
-    const [eye, setEye] = useState(true);
 
     const toggleEye = () => {
         setEye(!eye);
