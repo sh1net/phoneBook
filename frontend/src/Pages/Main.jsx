@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
-import { getUsers, searchData } from '../api/api';
+import { getPhones, searchData } from '../api/api';
 import DepartmentData from './PhoneArea/DepartmentData';
 import { selectSearchParams } from '../redux/searchSlice';
 import { useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ function Main() {
         setLoading(true);
         let data;
         if (searchedData.trim() === '') {
-          data = await getUsers();
+          data = await getPhones();
         } else {
           data = await searchData(searchedData);
         }

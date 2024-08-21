@@ -1,8 +1,8 @@
 const API_URL = 'http://localhost:3001/api';
 
-export const getUsers = async () => {
+export const getPhones = async () => {
   try {
-    const response = await fetch(`${API_URL}/users`);
+    const response = await fetch(`${API_URL}/phoneData`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

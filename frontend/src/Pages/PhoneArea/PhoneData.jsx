@@ -22,10 +22,11 @@ function PhoneData({tableData}) {
             <Table aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Подразделение</TableCell>
+                        <TableCell>Должность</TableCell>
                         <TableCell>Внутренний номер</TableCell>
                         <TableCell>Городской номер</TableCell>
                         <TableCell>Корпоративный номер</TableCell>
+                        <TableCell>ФИО</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -37,11 +38,12 @@ function PhoneData({tableData}) {
                             selected={selectedRow === index}
                         >
                             <TableCell component="th" scope="row">
-                                {row.podrazdelenie}
+                                {row.doljnost}
                             </TableCell>
-                            <TableCell>{row.vnutr}</TableCell>
-                            <TableCell>{row.gor || '-'}</TableCell>
                             <TableCell>{row.phone || '-'}</TableCell>
+                            <TableCell>{row.home_phone || '-'}</TableCell>
+                            <TableCell>{row.mobile_phone || '-'}</TableCell>
+                            <TableCell>{row.fio || '-'}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

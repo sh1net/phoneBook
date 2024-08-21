@@ -4,13 +4,14 @@ const connection = require('./db');
 const ldap = require('ldapjs');
 require('dotenv').config();
 
-router.get('/users', (req, res) => {
-  connection.query('SELECT * FROM users', (err, results) => {
+router.get('/phoneData', (req, res) => {
+  connection.query('SELECT * FROM phoneNumbers', (err, results) => {
     if (err) {
       console.error('Ошибка выполнения запроса:', err);
       res.status(500).send('Ошибка выполнения запроса');
       return;
     }
+    console.log(results)
     res.json(results);
   });
 });
