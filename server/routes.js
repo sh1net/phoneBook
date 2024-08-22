@@ -16,6 +16,61 @@ router.get('/phoneData', (req, res) => {
   });
 });
 
+router.get('/users', (req, res) => {
+  connection.query('SELECT * FROM auth_users', (err, results) => {
+    if (err) {
+      console.error('Ошибка выполнения запроса:', err);
+      res.status(500).send('Ошибка выполнения запроса');
+      return;
+    }
+    console.log(results);
+    res.json(results);
+  });
+});
+
+router.post('/addUser', (req, res) => {
+  const { name, role, department } = req.body;
+
+  const query = 'INSERT INTO auth_users (name, role, department) VALUES (?, ?, ?)';
+  connection.query(query, [name, role, department], (err, results) => {
+    if (err) {
+      console.error('Ошибка выполнения запроса:', err);
+      res.status(500).send('Ошибка выполнения запроса');
+      return;
+    }
+    res.status(201).send('Пользователь добавлен');
+  });
+});
+
+router.put('/editUser/:id', (req, res) => {
+  const userId = req.params.id;
+  const { name, role, department } = req.body;
+
+  const query = 'UPDATE auth_users SET name = ?, role = ?, department = ? WHERE id = ?';
+  connection.query(query, [name, role, department, userId], (err, results) => {
+    if (err) {
+      console.error('Ошибка выполнения запроса:', err);
+      res.status(500).send('Ошибка выполнения запроса');
+      return;
+    }
+    res.send('Пользователь обновлен');
+  });
+});
+
+router.delete('/deleteUser/:id', (req, res) => {
+  const userId = req.params.id;
+
+  const query = 'DELETE FROM auth_users WHERE id = ?';
+  connection.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error('Ошибка выполнения запроса:', err);
+      res.status(500).send('Ошибка выполнения запроса');
+      return;
+    }
+    res.send('Пользователь удален');
+  });
+});
+
 router.get('/search', (req, res) => {
   const searchQuery = req.query.q;
 
@@ -113,8 +168,8 @@ router.post('/login', (req, res) => {
               userLdapClient.unbind();
               return res.json(user);
             } else {
-              connection.query('INSERT INTO auth_users(name, role, department) VALUES (?, "пользователь", ?)',
-                [samAccountNameValue, ouValue],
+              connection.query('INSERT INTO auth_users(name, role, department) VALUES (?, "user", ?)',
+                [samAccountNameValue, null],
                 (err, insertResults) => {
                   if (err) {
                     console.log('ldap closed on insert sql');
@@ -125,8 +180,8 @@ router.post('/login', (req, res) => {
                   const newUser = {
                     id: insertResults.insertId,
                     name: samAccountNameValue,
-                    role: 'пользователь',
-                    department: ouValue
+                    role: 'user',
+                    department: null
                   };
                   console.log('ldap closed on end of request');
                   userLdapClient.unbind();

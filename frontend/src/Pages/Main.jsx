@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import { getPhones, searchData } from '../api/api';
 import DepartmentData from './PhoneArea/DepartmentData';
+import Admin from './AdminPage/Admin';
 import { selectSearchParams } from '../redux/searchSlice';
 import { useSelector } from 'react-redux';
 
 function Main() {
   const [departmentData, setDepartmentData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAdmin, setShowAdmin] = useState(false);
   const searchedData = useSelector(selectSearchParams);
-  console.log(loading)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,19 +23,31 @@ function Main() {
           data = await searchData(searchedData);
         }
         setDepartmentData(data);
-        setLoading(false)
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, [searchedData]); 
+  }, [searchedData]);
+
+  const showDepartmentData = () => {
+    setShowAdmin(false);
+  };
+
+  const showAdminData = () => {
+    setShowAdmin(true);
+  };
 
   return (
     <div>
-      <Navbar />
-      <DepartmentData departmentData={departmentData} loading={loading} />
+      <Navbar onProfileClick={showAdminData} onLogoClick={showDepartmentData} />
+      {showAdmin ? (
+        <Admin />
+      ) : (
+        <DepartmentData departmentData={departmentData} loading={loading} />
+      )}
     </div>
   );
 }

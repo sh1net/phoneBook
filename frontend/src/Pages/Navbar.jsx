@@ -8,7 +8,7 @@ import Search from '../components/Search';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAuthIsAuth, selectAuthUser, setIsAuth, setUser } from '../redux/authSlice'
 
-function Navbar() {
+function Navbar({ onProfileClick, onLogoClick }) {
 
     const [isLogin, setIsLogin] = useState(false)
 
@@ -29,6 +29,7 @@ function Navbar() {
         dispatch(setIsAuth(false))
         dispatch(setUser({}))
         localStorage.removeItem('user')
+        window.location.reload()
     }
 
     useEffect(() => {
@@ -40,16 +41,22 @@ function Navbar() {
 
     return (
         <div className='navbar_container'>
-            <div className='navbar_img_container'>
+            <div className='navbar_img_container' onClick={onLogoClick}>
                 <img src={mzh} className='logo_img' />
             </div>
             <div className='button_navbar_container'>
                 <Search />
                 {isAuth ?
                     <div className='navbar_user_logout_container'>
-                        <div className='navbar_user_profile_container'>
+                        <div className='navbar_user_profile_container' onClick={onProfileClick}>
                             <p className='navbar_user_profile_name'>{user.name}</p>
-                            <p className='navbar_user_profile_role'>{user.role}</p>
+                            <p className='navbar_user_profile_role'>
+                                {user.role === 'admin'
+                                    ? 'Администратор'
+                                    : user.role === 'manager'
+                                        ? 'Менеджер'
+                                        : 'Пользователь'}
+                            </p>
                         </div>
                         <Button
                             className='navbar_login_button'
