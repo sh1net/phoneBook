@@ -1,0 +1,36 @@
+.admin_add_user_button{
+    color:white !important;
+    background-color: gray !important;
+    border-radius: 10px !important;
+    margin:10px;
+}
+
+.buttons_container{
+    display:flex;
+    gap:10px;
+}
+
+.user_edit_button, .user_delete_button,.user_edit_accept_button,.user_edit_decline_button{
+    color:black !important;
+    border-radius: 10px !important;
+}
+
+.user_edit_button:hover{
+    background-color: rgb(222, 222, 255) !important;
+    color:blue !important;
+}
+
+.user_delete_button:hover{
+    background-color: rgb(246, 222, 222) !important;
+    color:red !important;
+}
+
+.user_edit_accept_button:hover{
+    background-color: rgb(220, 252, 220) !important;
+    color:green !important;
+}
+
+.user_edit_decline_button:hover{
+    background-color: rgb(246, 222, 222) !important;
+    color:red !important;
+}

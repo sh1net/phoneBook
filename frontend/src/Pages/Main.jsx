@@ -5,12 +5,16 @@ import DepartmentData from './PhoneArea/DepartmentData';
 import Admin from './AdminPage/Admin';
 import { selectSearchParams } from '../redux/searchSlice';
 import { useSelector } from 'react-redux';
+import { selectAuthUser } from '../redux/authSlice';
+import Manager from './ManagerPage/Manager'
 
 function Main() {
   const [departmentData, setDepartmentData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAdmin, setShowAdmin] = useState(false);
   const searchedData = useSelector(selectSearchParams);
+
+  const user = useSelector(selectAuthUser);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,17 +41,25 @@ function Main() {
   };
 
   const showAdminData = () => {
-    setShowAdmin(true);
+    if(user.role === 'admin' || user.role==='manager'){
+      setShowAdmin(true);
+    }
+  };
+
+  const renderContent = () => {
+    if (user.role === 'admin' && showAdmin) {
+      return <Admin />;
+    } else if (user.role === 'manager' && showAdmin) {
+      return <Manager />;
+    } else {
+      return <DepartmentData departmentData={departmentData} loading={loading} />;
+    }
   };
 
   return (
     <div>
       <Navbar onProfileClick={showAdminData} onLogoClick={showDepartmentData} />
-      {showAdmin ? (
-        <Admin />
-      ) : (
-        <DepartmentData departmentData={departmentData} loading={loading} />
-      )}
+      {renderContent()}
     </div>
   );
 }

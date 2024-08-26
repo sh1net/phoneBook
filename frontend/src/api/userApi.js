@@ -66,3 +66,29 @@ export const deleteUser = async (userId) => {
         throw error;
     }
 };
+
+export const validateUser = async (userId) => {
+    try {
+        const response = await fetch(`${API_URL}/validateUser/${userId}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+};
+
+export const fetchManagerData = async (userId) => {
+    try {
+        const response = await fetch(`${API_URL}/managerDepartment/${userId}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching manager data:', error);
+    }
+};

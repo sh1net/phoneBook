@@ -13,17 +13,7 @@ function Navbar({ onProfileClick, onLogoClick }) {
     const [isLogin, setIsLogin] = useState(false)
 
     const dispatch = useDispatch()
-
-    const isAuth = useSelector(selectAuthIsAuth);
     const user = useSelector(selectAuthUser);
-
-    const OpenLoginModal = () => {
-        setIsLogin(true)
-    }
-
-    const closeLoginModal = () => {
-        setIsLogin(false)
-    }
 
     const logout = () => {
         dispatch(setIsAuth(false))
@@ -46,35 +36,25 @@ function Navbar({ onProfileClick, onLogoClick }) {
             </div>
             <div className='button_navbar_container'>
                 <Search />
-                {isAuth ?
-                    <div className='navbar_user_logout_container'>
-                        <div className='navbar_user_profile_container' onClick={onProfileClick}>
-                            <p className='navbar_user_profile_name'>{user.name}</p>
-                            <p className='navbar_user_profile_role'>
-                                {user.role === 'admin'
-                                    ? 'Администратор'
-                                    : user.role === 'manager'
-                                        ? 'Менеджер'
-                                        : 'Пользователь'}
-                            </p>
-                        </div>
-                        <Button
-                            className='navbar_login_button'
-                            variant="outlined"
-                            endIcon={<IoMdLogOut />}
-                            onClick={logout}
-                        >Выйти</Button>
+                <div className='navbar_user_logout_container'>
+                    <div className='navbar_user_profile_container' onClick={onProfileClick}>
+                        <p className='navbar_user_profile_name'>{user.name}</p>
+                        <p className='navbar_user_profile_role'>
+                            {user.role === 'admin'
+                                ? 'Администратор'
+                                : user.role === 'manager'
+                                    ? 'Менеджер'
+                                    : 'Пользователь'}
+                        </p>
                     </div>
-                    :
                     <Button
                         className='navbar_login_button'
                         variant="outlined"
-                        endIcon={<IoMdLogIn />}
-                        onClick={OpenLoginModal}
-                    >Войти</Button>
-                }
+                        endIcon={<IoMdLogOut />}
+                        onClick={logout}
+                    >Выйти</Button>
+                </div>
             </div>
-            {isLogin && <Login closeModal={closeLoginModal} />}
         </div>
     )
 }

@@ -6,8 +6,11 @@ import { Button } from '@mui/material';
 import { login } from '../api/api'
 import { useDispatch } from 'react-redux';
 import { setIsAuth, setUser } from '../redux/authSlice';
+import backgroundImage from '../images/mgw-fon.png';
+import logoImage from '../images/MGW_logo_print.png';
+import { toast, Toaster } from "react-hot-toast";
 
-function Login({ closeModal }) {
+function Login() {
 
     const [userName, setUserName] = useState('')
     const [userPassword, setUserPassword] = useState('')
@@ -24,10 +27,13 @@ function Login({ closeModal }) {
 
         const result = await login(userName, userPassword);
         if (result) {
-            localStorage.setItem('user', JSON.stringify(result));
-            dispatch(setIsAuth(true));
-            dispatch(setUser(result));
-            closeModal();
+            if(!result.error){
+                localStorage.setItem('user', JSON.stringify(result));
+                dispatch(setIsAuth(true));
+                dispatch(setUser(result));
+            }else{
+                toast.error(result.error);
+            }
         } else {
             setError('Login failed. Please check your credentials.');
         }
@@ -46,12 +52,16 @@ function Login({ closeModal }) {
     };
 
     return (
-        <div className='login_modal_main_container'>
+        <div className='login_modal_main_container' style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+        }}>
+            <Toaster toastOptions={{ duration: 4000 }} />
+            <img src={logoImage} alt="Logo" className='login_modal_logo' />
             <div className='login_modal_container'>
-                <div className='login_modal_header_container'>
-                    <p className='login_modal_header_name'>Вход</p>
-                    <p className='login_modal_close_button' onClick={closeModal}>&times;</p>
-                </div>
+                <p className='login_modal_header_name'>Вход в телефонную книгу</p>
                 <div className='login_modal_enter_field'>
                     <div className='login_modal_password_container'>
                         <TextField
@@ -61,9 +71,11 @@ function Login({ closeModal }) {
                             className='login_modal_input_password'
                             value={userName}
                             onChange={handleUserName}
+                            size="small"
                             sx={{
                                 '& .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: 'gray',
+                                    border: '2px solid black',
+                                    borderRadius: '9px'
                                 },
                                 '&:hover .MuiOutlinedInput-notchedOutline': {
                                     borderColor: 'darkgray',
@@ -85,7 +97,8 @@ function Login({ closeModal }) {
                             onChange={handleUserPassword}
                             sx={{
                                 '& .MuiOutlinedInput-notchedOutline': {
-                                    borderColor: 'gray',
+                                    border: '2px solid black',
+                                    borderRadius: '9px'
                                 },
                                 '&:hover .MuiOutlinedInput-notchedOutline': {
                                     borderColor: 'darkgray',
@@ -94,11 +107,16 @@ function Login({ closeModal }) {
                                     borderColor: 'dimgray',
                                 },
                             }}
+                            size="small"
+                            InputProps={{
+                                endAdornment: (
+                                    eye
+                                        ? <IoMdEye className='login_modal_eye' onClick={toggleEye} />
+                                        : <IoMdEyeOff className='login_modal_eye' onClick={toggleEye} />
+
+                                ),
+                            }}
                         />
-                        {eye
-                            ? <IoMdEye className='login_modal_eye' onClick={toggleEye} />
-                            : <IoMdEyeOff className='login_modal_eye' onClick={toggleEye} />
-                        }
                     </div>
                     <Button
                         variant="outlined"
