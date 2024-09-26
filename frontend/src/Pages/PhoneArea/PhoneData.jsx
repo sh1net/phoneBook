@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,25 +6,41 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import '../../Styles/PhoneData.css'
+import '../../Styles/PhoneData.css';
 import { selectAuthUser } from '../../redux/authSlice';
 import { useSelector } from 'react-redux';
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 
 function PhoneData({ tableData }) {
-
     const [selectedRow, setSelectedRow] = useState(null);
+    const [editState, setEditState] = useState(null);
 
     const handleRowClick = (index) => {
-        setSelectedRow(index);
+        if (!editState) {
+            setSelectedRow(index === selectedRow ? null : index);
+            setEditState(null);
+        }
     };
 
-    const handleAddClick = () => {
-        console.log('Добавить строку');
+    const handleEditClick = (index) => {
+        setEditState({ ...tableData[index] });
     };
 
-    const handleDeleteClick = () => {
-        console.log('Удалить строку');
+    const handleSaveClick = () => {
+        console.log('Сохранить изменения', editState);
+
+        setEditState(null);
+    };
+
+    const handleCancelClick = () => {
+        setEditState(null);
+    };
+
+    const handleInputChange = (e, field) => {
+        setEditState((prevState) => ({
+            ...prevState,
+            [field]: e.target.value,
+        }));
     };
 
     const user = useSelector(selectAuthUser);
@@ -44,42 +60,124 @@ function PhoneData({ tableData }) {
                     </TableHead>
                     <TableBody>
                         {tableData.map((row, index) => (
-                            <TableRow
-                                key={index}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                onClick={() => handleRowClick(index)}
-                                selected={selectedRow === index}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {row.doljnost}
-                                </TableCell>
-                                <TableCell>{row.phone || '-'}</TableCell>
-                                <TableCell>{row.home_phone || '-'}</TableCell>
-                                <TableCell>{row.mobile_phone || '-'}</TableCell>
-                                <TableCell>{row.fio || '-'}</TableCell>
-                            </TableRow>
+                            <React.Fragment key={index}>
+                                <TableRow
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    onClick={() => handleRowClick(index)}
+                                    selected={selectedRow === index}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        {editState && selectedRow === index ? (
+                                            <TextField
+                                                value={editState.doljnost}
+                                                onChange={(e) => handleInputChange(e, 'doljnost')}
+                                                size="small"
+                                            />
+                                        ) : (
+                                            row.doljnost
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {editState && selectedRow === index ? (
+                                            <TextField
+                                                value={editState.phone}
+                                                onChange={(e) => handleInputChange(e, 'phone')}
+                                                size="small"
+                                            />
+                                        ) : (
+                                            row.phone || '-'
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {editState && selectedRow === index ? (
+                                            <TextField
+                                                value={editState.home_phone}
+                                                onChange={(e) => handleInputChange(e, 'home_phone')}
+                                                size="small"
+                                            />
+                                        ) : (
+                                            row.home_phone || '-'
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {editState && selectedRow === index ? (
+                                            <TextField
+                                                value={editState.mobile_phone}
+                                                onChange={(e) => handleInputChange(e, 'mobile_phone')}
+                                                size="small"
+                                            />
+                                        ) : (
+                                            row.mobile_phone || '-'
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {editState && selectedRow === index ? (
+                                            <TextField
+                                                value={editState.fio}
+                                                onChange={(e) => handleInputChange(e, 'fio')}
+                                                size="small"
+                                            />
+                                        ) : (
+                                            row.fio || '-'
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                                {user.role === 'admin' && selectedRow === index && (
+                                    <TableRow>
+                                        <TableCell colSpan={5} align="left">
+                                            <div className="button_group">
+                                                {editState ? (
+                                                    <>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={handleSaveClick}
+                                                        >
+                                                            Сохранить
+                                                        </Button>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            onClick={handleCancelClick}
+                                                        >
+                                                            Отменить
+                                                        </Button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            onClick={() => handleEditClick(index)}
+                                                        >
+                                                            Изменить
+                                                        </Button>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                        >
+                                                            Удалить
+                                                        </Button>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            onClick={handleRowClick}
+                                                        >
+                                                            Закрыть
+                                                        </Button></>
+                                                )}
+
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </React.Fragment>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-            {user.role === 'manager' && selectedRow !== null && (
-                <div className="button-group">
-                    <Button variant="contained" color="primary" onClick={handleAddClick}>
-                        Добавить
-                    </Button>
-                    <Button variant="contained" color="primary" onClick={handleAddClick}>
-                        Изменить
-                    </Button>
-                    <Button variant="contained" color="secondary" onClick={handleDeleteClick}>
-                        Удалить
-                    </Button>
-                    <Button variant="contained" color="secondary" onClick={handleDeleteClick}>
-                        Закрыть
-                    </Button>
-                </div>
-            )}
         </div>
-    )
+    );
 }
 
-export default PhoneData
+export default PhoneData;

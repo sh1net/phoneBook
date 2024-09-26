@@ -92,3 +92,22 @@ export const fetchManagerData = async (userId) => {
         console.error('Error fetching manager data:', error);
     }
 };
+
+export const updateManagerData = async (id, data) => {
+    try {
+        const response = await fetch(`${API_URL}/editDepartment/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.text();
+    } catch (error) {
+        console.error('Error editing user:', error);
+        throw error;
+    }
+};

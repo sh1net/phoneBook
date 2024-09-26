@@ -94,6 +94,41 @@ router.post('/addUser', (req, res) => {
   });
 });
 
+router.post('/addDepartment', (req, res) => {
+  const {
+    podrazdel1, 
+    podrazdel2, 
+    podrazdel3, 
+    podrazdel4, 
+    doljnost, 
+    fio, 
+    home_phone, 
+    phone, 
+    mobile_phone
+  } = req.body;
+
+  const query = 'INSERT INTO phoneNumbers (podrazdel, struct_podrazdel, vnutr_podrazdel, vnutr_podrazdel_podrazdel, doljnost, fio, home_phone, phone, mobile_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  
+  connection.query(query, [
+    podrazdel1, 
+    podrazdel2, 
+    podrazdel3, 
+    podrazdel4, 
+    doljnost, 
+    fio, 
+    home_phone, 
+    phone, 
+    mobile_phone
+  ], (err, results) => {
+    if (err) {
+      console.error('Ошибка выполнения запроса:', err);
+      res.status(500).send('Ошибка выполнения запроса');
+      return;
+    }
+    res.status(201).send('Запись успешно добавлена');
+  });
+});
+
 router.put('/editUser/:id', (req, res) => {
   const userId = req.params.id;
   const { name, role, department } = req.body;
@@ -109,6 +144,49 @@ router.put('/editUser/:id', (req, res) => {
   });
 });
 
+router.put('/editDepartment/:id', (req, res) => {
+  const dataId = req.params.id;
+  const { podrazdel, struct_podrazdel, vnutr_podrazdel, vnutr_podrazdel_podrazdel, phone, home_phone, mobile_phone, fio, doljnost } = req.body;
+
+  const query = 'UPDATE phonenumbers SET podrazdel = ?, struct_podrazdel = ?, vnutr_podrazdel = ?, vnutr_podrazdel_podrazdel = ?, phone = ?, home_phone = ?, mobile_phone = ?, fio = ?, doljnost = ? WHERE id = ?';
+  connection.query(query, [podrazdel, struct_podrazdel, vnutr_podrazdel, vnutr_podrazdel_podrazdel, phone, home_phone, mobile_phone, fio, doljnost, dataId], (err, results) => {
+    if (err) {
+      console.error('Ошибка выполнения запроса:', err);
+      res.status(500).send('Ошибка выполнения запроса');
+      return;
+    }
+    res.send('Данные обновлены');
+  });
+})
+
+router.put('/editDepartmentName', (req, res) => {
+  const { columnName, newValue, oldValue } = req.body;
+
+  if (!columnName || newValue === undefined) {
+    res.status(400).send('Необходимо указать имя столбца и новое значение');
+    return;
+  }
+
+  const allowedColumns = ['podrazdel', 'struct_podrazdel', 'vnutr_podrazdel', 'vnutr_podrazdel_podrazdel', 'phone', 'home_phone', 'mobile_phone', 'fio', 'doljnost'];
+  
+  if (!allowedColumns.includes(columnName)) {
+    res.status(400).send('Недопустимое имя столбца');
+    return;
+  }
+
+  const query = `UPDATE phonenumbers SET ${columnName} = ? WHERE ${columnName} = ?`;
+
+  connection.query(query, [newValue, oldValue], (err, results) => {
+    if (err) {
+      console.error('Ошибка выполнения запроса:', err);
+      res.status(500).send('Ошибка выполнения запроса');
+      return;
+    }
+    res.send('Данные успешно обновлены');
+  });
+});
+
+
 router.delete('/deleteUser/:id', (req, res) => {
   const userId = req.params.id;
 
@@ -120,6 +198,20 @@ router.delete('/deleteUser/:id', (req, res) => {
       return;
     }
     res.send('Пользователь удален');
+  });
+});
+
+router.delete('/deleteDepartment/:id', (req, res) => {
+  const departmentId = req.params.id;
+
+  const query = 'DELETE FROM phonenumbers WHERE id = ?';
+  connection.query(query, [departmentId], (err, results) => {
+    if (err) {
+      console.error('Ошибка выполнения запроса:', err);
+      res.status(500).send('Ошибка выполнения запроса');
+      return;
+    }
+    res.send('Запись удалена');
   });
 });
 

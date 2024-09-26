@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getAuthUsers, editUser, deleteUser } from '../../api/userApi'; // Ensure correct import paths
+import { getAuthUsers, editUser, deleteUser } from '../../api/userApi';
+import { getPhones } from '../../api/api';
 import '../../Styles/Admin.css'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,6 +17,7 @@ function Admin() {
     const [managersData, setManagersData] = useState([]);
     const [adminsData, setAdminsData] = useState([]);
     const [usersData, setUsersData] = useState([]);
+    const [uniqueDepartments, setUniqueDepartments] = useState([]);
     const [selectedManagerRow, setSelectedManagerRow] = useState(null);
     const [selectedAdminRow, setSelectedAdminRow] = useState(null);
     const [selectedUserRow, setSelectedUserRow] = useState(null);
@@ -23,14 +25,20 @@ function Admin() {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [isEditing, setIsEditing] = useState(false);
 
-
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const data = await getAuthUsers();
-                const managers = data.filter(user => user.role === 'manager');
-                const admins = data.filter(user => user.role === 'admin');
-                const users = data.filter(user => user.role === 'user');
+                const [userData, phoneData] = await Promise.all([getAuthUsers(), getPhones()]);
+                const managers = userData.filter(user => user.role === 'manager');
+                const admins = userData.filter(user => user.role === 'admin');
+                const users = userData.filter(user => user.role === 'user');
+
+                const allDepartments = phoneData.map(phone => phone.struct_podrazdel);
+                const uniqueDepartments = Array.from(new Set(allDepartments))
+                    .filter(dept => dept)
+                    .sort((a, b) => a.localeCompare(b));
+
+                setUniqueDepartments(uniqueDepartments);
                 setManagersData(managers);
                 setAdminsData(admins);
                 setUsersData(users);
@@ -66,25 +74,46 @@ function Admin() {
 
     const handleSave = async () => {
         let updatedUser;
+        let oldRole, newRole;
 
         if (selectedManagerRow !== null) {
             updatedUser = { ...managersData[selectedManagerRow] };
+            oldRole = 'manager';
         } else if (selectedAdminRow !== null) {
             updatedUser = { ...adminsData[selectedAdminRow] };
+            oldRole = 'admin';
         } else if (selectedUserRow !== null) {
             updatedUser = { ...usersData[selectedUserRow] };
+            oldRole = 'user';
         }
+        newRole = updatedUser.role;
 
         try {
             await editUser(updatedUser.id, updatedUser);
-            if (selectedManagerRow !== null) {
-                setManagersData(prev => prev.map((user, idx) => idx === selectedManagerRow ? updatedUser : user));
-            } else if (selectedAdminRow !== null) {
-                setAdminsData(prev => prev.map((user, idx) => idx === selectedAdminRow ? updatedUser : user));
-            } else if (selectedUserRow !== null) {
-                setUsersData(prev => prev.map((user, idx) => idx === selectedUserRow ? updatedUser : user));
+            if (oldRole !== newRole) {
+                if (oldRole === 'manager') {
+                    setManagersData(prev => prev.filter((user, idx) => idx !== selectedManagerRow));
+                } else if (oldRole === 'admin') {
+                    setAdminsData(prev => prev.filter((user, idx) => idx !== selectedAdminRow));
+                } else if (oldRole === 'user') {
+                    setUsersData(prev => prev.filter((user, idx) => idx !== selectedUserRow));
+                }
+                if (newRole === 'manager') {
+                    setManagersData(prev => [...prev, updatedUser]);
+                } else if (newRole === 'admin') {
+                    setAdminsData(prev => [...prev, updatedUser]);
+                } else if (newRole === 'user') {
+                    setUsersData(prev => [...prev, updatedUser]);
+                }
+            } else {
+                if (oldRole === 'manager') {
+                    setManagersData(prev => prev.map((user, idx) => idx === selectedManagerRow ? updatedUser : user));
+                } else if (oldRole === 'admin') {
+                    setAdminsData(prev => prev.map((user, idx) => idx === selectedAdminRow ? updatedUser : user));
+                } else if (oldRole === 'user') {
+                    setUsersData(prev => prev.map((user, idx) => idx === selectedUserRow ? updatedUser : user));
+                }
             }
-            console.log('Изменения сохранены:', updatedUser);
             setSnackbarMessage('Изменения сохранены');
             setSnackbarOpen(true);
         } catch (error) {
@@ -93,8 +122,12 @@ function Admin() {
             setSnackbarOpen(true);
         } finally {
             setIsEditing(false);
+            setSelectedManagerRow(null);
+            setSelectedAdminRow(null);
+            setSelectedUserRow(null);
         }
     };
+
 
     const handleDelete = () => {
         if (selectedManagerRow !== null) {
@@ -233,12 +266,16 @@ function Admin() {
                     </TableCell>
 
                     <TableCell>
-                        {isEditing && isSelected ? (
-                            <input
-                                type="text"
-                                value={row.department}
+                        {isEditing && isSelected && row.role !== 'admin' && row.role !== 'user' ? (
+                            <select
+                                value={row.department || ''}
                                 onChange={(e) => handleInputChange(e, 'department', index, role)}
-                            />
+                            >
+                                <option value="">Выберите департамент</option>
+                                {uniqueDepartments.map((dept, i) => (
+                                    <option key={i} value={dept}>{dept}</option>
+                                ))}
+                            </select>
                         ) : (
                             row.department || '-'
                         )}

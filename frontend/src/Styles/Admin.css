@@ -34,3 +34,41 @@
     background-color: rgb(246, 222, 222) !important;
     color:red !important;
 }
+
+.admin-panel {
+    padding: 20px;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.tab-button.active {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+}
+
+.tab-content {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.open_modal_button{
+    background-color:rgb(234, 234, 234) !important;
+    color:black !important;
+}
+
+.open_modal_button:hover{
+    background-color:rgb(216, 214, 214) !important;
+}
